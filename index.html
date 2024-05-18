@@ -37,30 +37,9 @@
         },
     ];
 
-    function saveData(data) {
-        const url = 'https://script.google.com/macros/s/AKfycbz3nJNF5iuOpKUFWG-4rfOs4uVHAH6MzdG2wG5cS-P3FygCHECO0YTJ5iyavTSOvVd-Pw/exec';
-        const payload = JSON.stringify(data);
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: payload,
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
-
     var jsPsych = initJsPsych({
         on_finish: function () {
-            const data = jsPsych.data.get().csv();
-            saveData(data);
+            jsPsych.data.get().localSave('csv', 'annotation_data.csv');
         },
         show_progress_bar: true,
     });
@@ -72,7 +51,7 @@
         stimulus: `
             <p><b>Welcome</b> to the 'Paced Mentats: Expert Data Annotation' process.</p>
             <p><b>Thank you so much</b> for taking the time and sharing your valuable expertise! We are excited and happy to have you on the team!</p>
-            <p>You are accessing version v0.1 (05/17/2024)</p>
+            <p>You are accessing version v0.11 (05/17/2024)</p>
             <p>Press any key to begin.</p>
         `
     };

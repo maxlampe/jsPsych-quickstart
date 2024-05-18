@@ -49,7 +49,12 @@
 
     const welcome = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: 'Welcome to the data annotation process. Press any key to begin.'
+        stimulus: `
+            <p><b>Welcome</b> to the 'Paced Mentats: Expert Data Annotation' process.</p>
+            <p><b>Thank you so much</b> for taking the time and sharing your valuable expertise! We are excited and happy to have you on the team!</p>
+            <p>You are accessing version v0.1 (05/17/2024)</p>
+            <p>Press any key to begin.</p>
+        `
     };
     timeline.push(welcome);
 
@@ -64,6 +69,14 @@
                 participant_name: document.getElementById('participant-name').value, 
                 rater_id: document.getElementById('rater-id').value 
             })">Submit</button>
+            <p>\n\n<h2>Instructions</h2>\n
+            In the following survey, you will be shown one question at a time with a set of possible answers. </p>
+            <p><b>Please take your time to read each question and all the answers carefully</b>.</p>
+            <p><b>Move the sliders</b> for each answer option to <b>indicate how confident you are</b> that the answer is a correct response to the question.</p>
+            <p>\nIf you are certain that the answer is a <b>correct joice for the question</b>, move the slide <b>all the way to the right</b>.</p>
+            <p>\nIf you are certain that the answer is an <b>incorrect joice for the question</b>, move the slide <b>all the way to the left</b>.</p>
+            <p>Multiple answers can be correct, incorrect, or somewhere in the between.</p>
+            <p>If you think there is an issue with the quesiton or one of the answers, please use the text box under each question to share your thoughts.</p>
         `,
         choices: "NO_KEYS",
         on_load: function() {

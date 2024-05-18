@@ -8,7 +8,8 @@
         <!-- Load the jspsych library and plugins -->
         <script src="scripts/jspsych.js"></script>
         <script src="scripts/plugins/jspsych-text.js"></script>
-        <script src="scripts/plugins/jspsych-single-stim.js"></script>
+        <!-- <script src="scripts/plugins/jspsych-single-stim.js"></script> -->
+        <script src="scripts/plugins/plugin-survey-slider.js"></script>
         <!-- Load the stylesheet -->
         <link href="css/jspsych.css" type="text/css" rel="stylesheet"></link>
     </head>
@@ -33,38 +34,49 @@
 
         // Generating Random Order for Stimuli
 		
-		var stimuli = [
-			{image: "img/congruent_left.gif", data: { stimulus_type: "congruent" }}, 
-			{image: "img/congruent_right.gif", data: { stimulus_type: "congruent" }},
-			{image: "img/incongruent_left.gif", data: { stimulus_type: "incongruent" }},
-			{image: "img/incongruent_right.gif", data: { stimulus_type: "incongruent" }},
-		];
+		// var stimuli = [
+		// 	{image: "img/congruent_left.gif", data: { stimulus_type: "congruent" }}, 
+		// 	{image: "img/congruent_right.gif", data: { stimulus_type: "congruent" }},
+		// 	{image: "img/incongruent_left.gif", data: { stimulus_type: "incongruent" }},
+		// 	{image: "img/incongruent_right.gif", data: { stimulus_type: "incongruent" }},
+		// ];
         
-		var trial_info = jsPsych.randomization.repeat(stimuli, n_trials_per_stimulus, true);
+		// var trial_info = jsPsych.randomization.repeat(stimuli, n_trials_per_stimulus, true);
         
         // Define experiment blocks
         var instruction_block = {
-                type: "text",
-                text: [welcome_message, instructions],
-                timing_post_trial: 1500
-            };
+            type: "text",
+            text: [welcome_message, instructions],
+            timing_post_trial: 1500
+        };
         
+        // var test_block = {
+        //         type: "single-stim",
+        //         stimuli: trial_info.image,
+        //         choices: [37, 39],
+        //         data: trial_info.data,
+		// 		timing_post_trial: function() {
+		// 			return Math.floor(Math.random()*1000)+1000;
+		// 		}
+        //     };
+
         var test_block = {
-                type: "single-stim",
-                stimuli: trial_info.image,
-                choices: [37, 39],
-                data: trial_info.data,
-				timing_post_trial: function() {
-					return Math.floor(Math.random()*1000)+1000;
-				}
-            };
+            type: jsPsychSurveySlider,
+            questions: [
+                {prompt:'<p>Question</p> Answer A', ticks:['0','100']},
+                {prompt:'Answer B', ticks:['0','100']},
+                {prompt:'Answer C', ticks:['0','100']},
+                {prompt:'Answer D', ticks:['0','100']}
+            ],
+            post_trial_gap: 1500
+        };
             
         var debrief_block = {
-                type: "text",
-                text: [debrief]
-            };
+            type: "text",
+            text: [debrief]
+        };
             
-		jsPsych.preloadImages(trial_info.image, function() { start_experiment(); });
+		// jsPsych.preloadImages(trial_info.image, function() { start_experiment(); });
 		
 		function start_experiment() {
 			jsPsych.init({

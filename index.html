@@ -85,10 +85,7 @@
             <input type="text" id="participant-name" name="participant-name">
             <p>Please enter your given unique rater ID (UID):</p>
             <input type="text" id="rater-id" name="rater-id">
-            <button onclick="jsPsych.finishTrial({ 
-                participant_name: document.getElementById('participant-name').value, 
-                rater_id: document.getElementById('rater-id').value 
-            })">Submit</button>
+            <button id="submit-info">Submit</button>
             <p>\n\n<h2>Instructions</h2>\n
             In the following survey, you will be shown one question at a time with a set of possible answers. </p>
             <p><b>Please take your time to read each question and all the answers carefully</b>.</p>
@@ -100,11 +97,17 @@
         `,
         choices: "NO_KEYS",
         on_load: function() {
-            document.querySelector('button').addEventListener('click', function() {
-                jsPsych.finishTrial({
-                    participant_name: document.getElementById('participant-name').value,
-                    rater_id: document.getElementById('rater-id').value
-                });
+            document.getElementById('submit-info').addEventListener('click', function() {
+                const participantName = document.getElementById('participant-name').value;
+                const raterId = document.getElementById('rater-id').value;
+                if (participantName && raterId) {
+                    jsPsych.finishTrial({
+                        participant_name: participantName,
+                        rater_id: raterId
+                    });
+                } else {
+                    alert('Please enter both your name and rater ID.');
+                }
             });
         }
     };

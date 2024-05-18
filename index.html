@@ -38,7 +38,7 @@
     ];
 
     function saveData(data) {
-        const url = 'https://script.google.com/macros/s/AKfycbyRxBPIwEP9ws5YdTrs1lZahwWUJZ51mjWF0mQfFeWIZHannE9XroJ9xraFqrwcAQyCaw/exec';
+        const url = 'https://script.google.com/macros/s/AKfycbz3nJNF5iuOpKUFWG-4rfOs4uVHAH6MzdG2wG5cS-P3FygCHECO0YTJ5iyavTSOvVd-Pw/exec';
         const payload = JSON.stringify(data);
 
         fetch(url, {
@@ -90,10 +90,10 @@
             In the following survey, you will be shown one question at a time with a set of possible answers. </p>
             <p><b>Please take your time to read each question and all the answers carefully</b>.</p>
             <p><b>Move the sliders</b> for each answer option to <b>indicate how confident you are</b> that the answer is a correct response to the question.</p>
-            <p>\nIf you are certain that the answer is a <b>correct joice for the question</b>, move the slide <b>all the way to the right</b>.</p>
-            <p>\nIf you are certain that the answer is an <b>incorrect joice for the question</b>, move the slide <b>all the way to the left</b>.</p>
-            <p>Multiple answers can be correct, incorrect, or somewhere in the between.</p>
-            <p>If you think there is an issue with the quesiton or one of the answers, please use the text box under each question to share your thoughts.</p>
+            <p>\nIf you are certain that the answer is a <b>correct choice for the question</b>, move the slide <b>all the way to the right</b>.</p>
+            <p>\nIf you are certain that the answer is an <b>incorrect choice for the question</b>, move the slide <b>all the way to the left</b>.</p>
+            <p>Multiple answers can be correct, incorrect, or somewhere in between.</p>
+            <p>If you think there is an issue with the question or one of the answers, please use the text box under each question to share your thoughts.</p>
         `,
         choices: "NO_KEYS",
         on_load: function() {

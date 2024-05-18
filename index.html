@@ -38,9 +38,30 @@
         },
     ];
 
+    function saveData(data) {
+        const url = 'https://script.google.com/macros/s/AKfycbyP7iMI5MlFnTtVgmJjzHkgx1cBr5d6NYR-jjghBmCKketxDQtIvRMxtNhyCgA40e6bfQ/exec';
+        const payload = JSON.stringify(data);
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: payload,
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
     var jsPsych = initJsPsych({
         on_finish: function () {
-            jsPsych.data.get().localSave('csv','annotation_data.csv');
+            const data = jsPsych.data.get().csv();
+            saveData(data);
         },
         show_progress_bar: true,
     });

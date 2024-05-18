@@ -3,20 +3,48 @@
 <head>
     <title>Paced Mentats: Expert Data Annotation</title>
     <script src="jspsych/jspsych.js"></script>
+    <script src="./questions.js"></script>
     <script src="jspsych/plugin-html-keyboard-response.js"></script>
-    <script src="jspsych/plugin-image-keyboard-response.js"></script>
-    <script src="jspsych/plugin-html-slider-response.js"></script>
-    <script src="jspsych/plugin-survey-likert.js"></script>
-    <script src="jspsych/plugin-preload.js"></script>
     <script src="plugin-survey-slider.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
 </head>
 <body></body>
 <script>
+
+    // import { test } from './questions.js';
+    var questions = [
+    {
+        "name": "1",
+        "question": "What is the largest planet in our solar system?",
+        "choice1": "Earth",
+        "choice2": "Jupiter",
+        "choice3": "Saturn",
+        "choice4": "Mars"
+    },
+    {
+        "name": "2",
+        "question": "What is the boiling point of water?",
+        "choice1": "90°C",
+        "choice2": "100°C",
+        "choice3": "110°C",
+        "choice4": "120°C"
+    },
+    {
+        "name": "3",
+        "question": "Who wrote 'Romeo and Juliet'?",
+        "choice1": "Mark Twain",
+        "choice2": "Charles Dickens",
+        "choice3": "William Shakespeare",
+        "choice4": "Jane Austen"
+    },
+];
     var jsPsych = initJsPsych({
-        on_finish: function() {
-            jsPsych.data.displayData();
+        timeline: timeline,
+        on_finish: function () {
+        //   var filtered_data = jsPsych.data.get().filterCustom(function(trial) {
+        //     return (trial.trial_type == "html-keyboard-response" && ((trial.trial_part == "probe") || (trial.trial_part == "question")));
+        //   });
+        jsPsych.data.get().localSave('csv','annotation_data.csv');
         },
         show_progress_bar: true,
     });
@@ -31,18 +59,51 @@
     timeline.push(welcome);
 
     console.log("Initialize Question", timeline);
-    const survey = {
-        type: jsPsychSurveySlider,
-        questions: [
-            {prompt:'Answer A', ticks:['0','100']},
-            {prompt:'Answer B', ticks:['0','100']},
-            {prompt:'Answer C', ticks:['0','100']},
-            {prompt:'Answer D', ticks:['0','100']}
-        ],
-        post_trial_gap: 1500
-    };
-    timeline.push(survey);
 
+    function createSurvey(questionData) {
+        function getRandomSliderStart() {
+            return Math.floor(Math.random() * 101); // Generates a random integer between 0 and 100
+        }
+
+        return {
+            type: jsPsychSurveySlider,
+            preamble: "<p>" + questionData.question + "</p>", 
+            questions: [
+                {prompt: questionData.choice1, ticks:['0','100'], slider_start: getRandomSliderStart()},
+                {prompt: questionData.choice2, ticks:['0','100'], slider_start: getRandomSliderStart()},
+                {prompt: questionData.choice3, ticks:['0','100'], slider_start: getRandomSliderStart()},
+                {prompt: questionData.choice4, ticks:['0','100'], slider_start: getRandomSliderStart()},
+            ],
+            post_trial_gap: 1000,
+            randomize_question_order: true,
+            slider_width: 200,
+            data: { name: questionData.name, comment: '' }, // Initialize comment field
+            on_load: function() {
+                const commentBox = document.createElement('textarea');
+                commentBox.id = 'comment-box';
+                commentBox.placeholder = 'Optional comments...';
+                commentBox.style.width = '100%';
+                document.querySelector('.jspsych-content').appendChild(commentBox);
+            },
+            on_finish: function(data) {
+                const commentBox = document.getElementById('comment-box');
+                if (commentBox) {
+                    data.comment = commentBox.value;
+                }
+            }
+        };
+    }
+
+    // questions.forEach(function(question) {
+    //     var survey = createSurvey(question);
+    //     timeline.push(survey);
+    // });
+    var sampledQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+    sampledQuestions.forEach(function(question) {
+        var survey = createSurvey(question);
+        timeline.push(survey);
+    });
 
     console.log("Starting experiment with timeline:", timeline);
     jsPsych.run(timeline);

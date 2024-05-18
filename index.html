@@ -11,54 +11,71 @@
 <body></body>
 <script>
 
-    // import { test } from './questions.js';
     var questions = [
-    {
-        "name": "1",
-        "question": "What is the largest planet in our solar system?",
-        "choice1": "Earth",
-        "choice2": "Jupiter",
-        "choice3": "Saturn",
-        "choice4": "Mars"
-    },
-    {
-        "name": "2",
-        "question": "What is the boiling point of water?",
-        "choice1": "90°C",
-        "choice2": "100°C",
-        "choice3": "110°C",
-        "choice4": "120°C"
-    },
-    {
-        "name": "3",
-        "question": "Who wrote 'Romeo and Juliet'?",
-        "choice1": "Mark Twain",
-        "choice2": "Charles Dickens",
-        "choice3": "William Shakespeare",
-        "choice4": "Jane Austen"
-    },
-];
+        {
+            "q_no": "1",
+            "question": "What is the largest planet in our solar system?",
+            "choice1": "Earth",
+            "choice2": "Jupiter",
+            "choice3": "Saturn",
+            "choice4": "Mars"
+        },
+        {
+            "q_no": "2",
+            "question": "What is the boiling point of water?",
+            "choice1": "90°C",
+            "choice2": "100°C",
+            "choice3": "110°C",
+            "choice4": "120°C"
+        },
+        {
+            "q_no": "3",
+            "question": "Who wrote 'Romeo and Juliet'?",
+            "choice1": "Mark Twain",
+            "choice2": "Charles Dickens",
+            "choice3": "William Shakespeare",
+            "choice4": "Jane Austen"
+        },
+    ];
+
     var jsPsych = initJsPsych({
-        timeline: timeline,
         on_finish: function () {
-        //   var filtered_data = jsPsych.data.get().filterCustom(function(trial) {
-        //     return (trial.trial_type == "html-keyboard-response" && ((trial.trial_part == "probe") || (trial.trial_part == "question")));
-        //   });
-        jsPsych.data.get().localSave('csv','annotation_data.csv');
+            jsPsych.data.get().localSave('csv','annotation_data.csv');
         },
         show_progress_bar: true,
     });
 
     var timeline = [];
 
-    console.log("Initialize Experiment", timeline);
     const welcome = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: 'Welcome to the data annotation process. Press any key to begin.'
     };
     timeline.push(welcome);
 
-    console.log("Initialize Question", timeline);
+    const participantInfo = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `
+            <p>Please enter your first name:</p>
+            <input type="text" id="participant-name" name="participant-name">
+            <p>Please enter your given unique rater ID (UID):</p>
+            <input type="text" id="rater-id" name="rater-id">
+            <button onclick="jsPsych.finishTrial({ 
+                participant_name: document.getElementById('participant-name').value, 
+                rater_id: document.getElementById('rater-id').value 
+            })">Submit</button>
+        `,
+        choices: "NO_KEYS",
+        on_load: function() {
+            document.querySelector('button').addEventListener('click', function() {
+                jsPsych.finishTrial({
+                    participant_name: document.getElementById('participant-name').value,
+                    rater_id: document.getElementById('rater-id').value
+                });
+            });
+        }
+    };
+    timeline.push(participantInfo);
 
     function createSurvey(questionData) {
         function getRandomSliderStart() {
@@ -76,28 +93,12 @@
             ],
             post_trial_gap: 1000,
             randomize_question_order: true,
+            require_movement: true,
             slider_width: 200,
-            data: { name: questionData.name, comment: '' }, // Initialize comment field
-            on_load: function() {
-                const commentBox = document.createElement('textarea');
-                commentBox.id = 'comment-box';
-                commentBox.placeholder = 'Optional comments...';
-                commentBox.style.width = '100%';
-                document.querySelector('.jspsych-content').appendChild(commentBox);
-            },
-            on_finish: function(data) {
-                const commentBox = document.getElementById('comment-box');
-                if (commentBox) {
-                    data.comment = commentBox.value;
-                }
-            }
+            data: { q_no: questionData.q_no, q: questionData.question }, 
         };
     }
 
-    // questions.forEach(function(question) {
-    //     var survey = createSurvey(question);
-    //     timeline.push(survey);
-    // });
     var sampledQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 3);
 
     sampledQuestions.forEach(function(question) {
@@ -105,8 +106,7 @@
         timeline.push(survey);
     });
 
-    console.log("Starting experiment with timeline:", timeline);
     jsPsych.run(timeline);
-    console.log("Done!", timeline);
+
 </script>
 </html>

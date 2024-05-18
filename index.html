@@ -84,7 +84,7 @@
 
         return {
             type: jsPsychSurveySlider,
-            preamble: "<p>" + questionData.question + "</p>", 
+            preamble: "<p>Q" + questionData.q_no + ": " + questionData.question + "</p>", 
             questions: [
                 {prompt: questionData.choice1, ticks:['0','100'], slider_start: getRandomSliderStart()},
                 {prompt: questionData.choice2, ticks:['0','100'], slider_start: getRandomSliderStart()},
